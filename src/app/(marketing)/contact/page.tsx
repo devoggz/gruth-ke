@@ -200,7 +200,7 @@ export default function ContactPage() {
 
                     <p className="text-xs text-charcoal-400 text-center">
                       For urgent matters, use{" "}
-                      <a href="https://wa.me/254700000000" target="_blank" rel="noopener noreferrer"
+                      <a href="https://wa.me/2547106699315" target="_blank" rel="noopener noreferrer"
                          className="text-[#25D366] font-semibold hover:underline">WhatsApp</a>{" "}
                       for a faster response.
                     </p>
