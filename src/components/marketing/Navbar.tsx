@@ -141,7 +141,7 @@ export default function Navbar() {
 
           {/* CTAs + theme toggle */}
           <div className="hidden md:flex items-center gap-2">
-            {/*<ThemeToggle />*/}
+            <ThemeToggle />
             <Link
               href="/login"
               className="text-sm font-medium px-4 py-2 rounded-lg transition-colors"
