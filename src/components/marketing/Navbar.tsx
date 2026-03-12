@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -94,23 +95,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-charcoal-950 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500 transition-colors duration-200">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path
-                  d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <circle cx="9" cy="9" r="2" fill="#f97316" />
-              </svg>
-            </div>
-            <span
-              className="font-display font-bold text-lg tracking-tight"
-              style={{ color: "var(--text-primary)" }}
-            >
-              GRUTH
-            </span>
+          <Image src="/images/logo-t.svg" alt="logo" width={222} height={64} />
+
           </Link>
 
           {/* Desktop nav */}
@@ -209,18 +195,12 @@ export default function Navbar() {
             className="pt-3 border-t space-y-2"
             style={{ borderColor: "var(--border)" }}
           >
+
             <Link
               href="/login"
-              className="flex justify-center py-2.5 text-sm font-medium rounded-xl"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/request-verification"
               className="btn-primary text-sm justify-center w-full"
             >
-              Request Verification
+              Sign in
             </Link>
           </div>
         </div>
