@@ -1,4 +1,3 @@
-// src/components/home/HeroSection.tsx
 import Link from "next/link";
 
 const trustBadges = [
@@ -9,16 +8,15 @@ const trustBadges = [
 ];
 
 const statCards = [
-  { value: "850+", label: "Families served" },
-  { value: "48h", label: "Report turnaround" },
-  { value: "100%", label: "Independent inspectors" },
-  { value: "6", label: "Service categories" },
+  { value: "150+", label: "Families Served" },
+  { value: "48h", label: "Report Turnaround" },
+  { value: "100%", label: "Independent Inspectors" },
+  { value: "6", label: "Service Categories" },
 ];
 
 export default function HeroSection() {
   return (
     <section className="relative bg-charcoal-950 min-h-[92vh] flex items-center overflow-hidden">
-      {/* ── Square grid ─────────────────────────────────────────────────────── */}
       <div
         className="absolute inset-0 opacity-[0.06]"
         style={{
@@ -30,7 +28,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* ── Radial vignette — fades grid toward edges ────────────────────────── */}
       <div
         className="absolute inset-0"
         style={{
@@ -39,7 +36,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* ── Ambient glow blobs ───────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-24 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-24 left-8  w-56 h-56 bg-orange-500/5  rounded-full blur-2xl" />
@@ -67,7 +63,7 @@ export default function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8 uppercase tracking-wider">
             <span className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse" />
-            Trusted by 850+ diaspora families
+            Ground Truth Verification
           </div>
 
           {/* Headline */}
