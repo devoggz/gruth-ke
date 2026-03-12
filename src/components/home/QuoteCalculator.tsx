@@ -1,13 +1,9 @@
 'use client'
-// src/components/home/QuoteCalculator.tsx
-// Quick Quote Estimator — reusable on homepage + services page.
-// Outputs a price range + breakdown + CTA that pre-fills /request-verification
-// via URL search params.
 
-import { useState, useMemo } from 'react'
+
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SERVICE_TYPES = [
     { value: 'construction',  label: 'Construction Verification',  base: [18000, 45000], popular: false },
@@ -61,7 +57,6 @@ type AddonValue = typeof ADDONS[number]['value']
 // Size only matters for these services
 const SIZE_SERVICES: ServiceValue[] = ['construction', 'land', 'business']
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Estimate {
     low:       number
@@ -114,7 +109,6 @@ function useEstimate(
     }, [service, county, urgency, size, addons])
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function QuoteCalculator() {
     const [service, setService] = useState<ServiceValue>('construction')
@@ -139,14 +133,6 @@ export default function QuoteCalculator() {
 
     return (
         <section className="py-24 bg-charcoal-950 relative overflow-hidden">
-            {/* Subtle grid texture */}
-            <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                    backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-                    backgroundSize: '48px 48px',
-                }}
-            />
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

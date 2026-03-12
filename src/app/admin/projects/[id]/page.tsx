@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { type Prisma } from '@prisma/client'
 import {
     formatCurrency,
     formatDate,
@@ -13,42 +14,72 @@ import {
     getBudgetRisk,
 } from '@/lib/utils'
 import AdminProjectActions from '@/components/admin/AdminProjectActions'
+import AdminAssignInspector from '@/components/admin/AdminAssignInspector'
+
+// ── Derived Prisma payload types ─────────────────────────────────────────────
+
+type ProjectWithRelations = Prisma.ProjectGetPayload<{
+    include: {
+        client: { select: { id: true; name: true; email: true; phone: true; country: true } }
+        inspector: { select: { id: true; name: true; email: true } }
+        inspections: { include: { media: true; report: true } }
+        materialPrices: { include: { supplier: true } }
+        vendors: true
+        alerts: true
+        messages: { include: { user: { select: { name: true } } } }
+        progressStages: true
+    }
+}>
+
+type InspectionMedia = ProjectWithRelations['inspections'][number]['media'][number]
+type Alert           = ProjectWithRelations['alerts'][number]
+type Message         = ProjectWithRelations['messages'][number]
 
 interface PageProps {
-    params: { id: string }
+    params: Promise<{ id: string }>
 }
 
 export async function generateMetadata({ params }: PageProps) {
+    const { id } = await params
     const project = await prisma.project.findUnique({
-        where: { id: params.id },
+        where: { id },
         select: { name: true },
     })
     return { title: project ? `${project.name} — Admin | GRUTH` : 'Project' }
 }
 
 export default async function AdminProjectDetailPage({ params }: PageProps) {
+    const { id } = await params
     const session = await auth()
-    if ((session?.user as any)?.role !== 'ADMIN') redirect('/dashboard')
+    const userRole = (session?.user as { role?: string } | undefined)?.role
+    if (userRole !== 'ADMIN') redirect('/dashboard')
 
-    const project = await prisma.project.findUnique({
-        where: { id: params.id },
-        include: {
-            client: { select: { id: true, name: true, email: true, phone: true, country: true } },
-            inspections: {
-                orderBy: { scheduledDate: 'desc' },
-                include: { media: true, report: true },
+    const [project, inspectors] = await Promise.all([
+        prisma.project.findUnique({
+            where: { id },
+            include: {
+                client: { select: { id: true, name: true, email: true, phone: true, country: true } },
+                inspector: { select: { id: true, name: true, email: true } },
+                inspections: {
+                    orderBy: { scheduledDate: 'desc' },
+                    include: { media: true, report: true },
+                },
+                materialPrices: { include: { supplier: true } },
+                vendors: { orderBy: { createdAt: 'asc' } },
+                alerts: { orderBy: { createdAt: 'desc' } },
+                messages: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 3,
+                    include: { user: { select: { name: true } } },
+                },
+                progressStages: { orderBy: { order: 'asc' } },
             },
-            materialPrices: { include: { supplier: true } },
-            vendors: { orderBy: { createdAt: 'asc' } },
-            alerts: { orderBy: { createdAt: 'desc' } },
-            messages: {
-                orderBy: { createdAt: 'desc' },
-                take: 3,
-                include: { user: { select: { name: true } } },
-            },
-            progressStages: { orderBy: { order: 'asc' } },
-        },
-    })
+        }) as Promise<ProjectWithRelations | null>,
+        prisma.user.findMany({
+            where: { role: 'INSPECTOR' },
+            select: { id: true, name: true, email: true },
+        }),
+    ])
 
     if (!project) notFound()
 
@@ -56,11 +87,10 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
         ? getBudgetRisk(project.estimatedBudget, project.amountSpent)
         : null
 
-    const allPhotos = project.inspections.flatMap(i =>
-        i.media.filter(m => m.type === 'PHOTO').map(m => ({
-            ...m,
-            inspectionDate: i.scheduledDate,
-        }))
+    const allPhotos = project.inspections.flatMap(inspection =>
+        inspection.media
+            .filter((m: InspectionMedia) => m.type === 'PHOTO')
+            .map((m: InspectionMedia) => ({ ...m, inspectionDate: inspection.scheduledDate }))
     )
 
     const completedStages = project.progressStages.filter(s => s.completed).length
@@ -68,8 +98,8 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
         ? Math.round((completedStages / project.progressStages.length) * 100)
         : 0
 
-    const unreadAlerts = project.alerts.filter(a => !a.isRead).length
-    const unreadMessages = project.messages.filter(m => m.isFromClient && !m.readAt).length
+    const unreadAlerts   = project.alerts.filter((a: Alert) => !a.isRead).length
+    const unreadMessages = project.messages.filter((m: Message) => m.isFromClient && !m.readAt).length
 
     return (
         <div className="space-y-6 pb-16 max-w-6xl">
@@ -276,6 +306,32 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                         <p className="text-sm text-charcoal-300">No stages defined.</p>
                     )}
                 </div>
+            </div>
+
+            {/* ── Inspector assignment ─────────────────────────────────────────────── */}
+            <div className="bg-white rounded-2xl border border-charcoal-100 p-5">
+                <p className="text-[10px] font-bold text-charcoal-400 uppercase tracking-[0.12em] mb-4">Assigned Inspector</p>
+                {project.inspector && (
+                    <div className="flex items-center gap-3 mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+                        <div className="w-9 h-9 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xs font-bold">
+                {project.inspector.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() ?? 'IN'}
+              </span>
+                        </div>
+                        <div className="min-w-0">
+                            <p className="font-semibold text-charcoal-900 text-sm">{project.inspector.name}</p>
+                            <p className="text-xs text-charcoal-400 truncate">{project.inspector.email}</p>
+                        </div>
+                        <span className="ml-auto text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full flex-shrink-0">
+              ASSIGNED
+            </span>
+                    </div>
+                )}
+                <AdminAssignInspector
+                    projectId={project.id}
+                    currentInspectorId={project.inspectorId ?? null}
+                    inspectors={inspectors}
+                />
             </div>
 
             {/* ── Description ──────────────────────────────────────────────────────── */}

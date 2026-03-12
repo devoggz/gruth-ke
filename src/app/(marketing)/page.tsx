@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import HeroSection from "@/components/sections/HeroSection";
-import StatsBar from "@/components/sections/StatsBar";
 import ProblemSection from "@/components/sections/ProblemSection";
 import ServicesSection from "@/components/sections/ServicesSection";
 import QuoteCalculator from "@/components/home/QuoteCalculator";
@@ -17,7 +16,6 @@ export default function HomePage() {
     return (
         <div className="pt-16">
             <HeroSection />
-            {/*<StatsBar />*/}
             <ProblemSection />
             <ServicesSection />
             <QuoteCalculator />

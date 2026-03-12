@@ -26,12 +26,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <Link
-              href="/request-verification"
-              className="hidden sm:flex btn-primary text-xs py-2 px-4"
-          >
-            + New Verification
-          </Link>
+
           <UserMenu name={user?.name} email={user?.email} role={user?.role} />
         </div>
       </header>

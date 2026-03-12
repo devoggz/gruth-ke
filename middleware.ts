@@ -1,71 +1,47 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+// src/middleware.ts — GRUTH route guard (updated for INSPECTOR role)
+import { auth } from "@/lib/auth"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
-export async function middleware(request: NextRequest) {
-    const session = await auth();
-    const { pathname } = request.nextUrl;
+export async function middleware(req: NextRequest) {
+    const { pathname } = req.nextUrl
+    const session = await auth()
+    const user = session?.user as any
+    const role = user?.role
 
-    const isLoggedIn = !!session;
-    const isAdmin = session?.user?.role === "ADMIN";
-    const isEmailVerified = !!(session?.user as any)?.emailVerified;
-
-    // ── /dashboard — must be logged in and NOT admin ──────────────────────────
-    if (pathname.startsWith("/dashboard")) {
-        if (!isLoggedIn) {
-            const loginUrl = new URL("/login", request.url);
-            loginUrl.searchParams.set("callbackUrl", pathname);
-            return NextResponse.redirect(loginUrl);
-        }
-
-        // redirect admins away from user dashboard
-        if (isAdmin) {
-            return NextResponse.redirect(new URL("/admin", request.url));
-        }
-
-        return NextResponse.next();
-    }
-
-    // ── /admin — must be logged in AND ADMIN ──────────────────────────────────
+    // Admin routes — ADMIN only
     if (pathname.startsWith("/admin")) {
-        if (!isLoggedIn) {
-            const loginUrl = new URL("/login", request.url);
-            loginUrl.searchParams.set("callbackUrl", pathname);
-            return NextResponse.redirect(loginUrl);
-        }
-
-        if (!isAdmin) {
-            return NextResponse.redirect(new URL("/dashboard", request.url));
-        }
-
-        return NextResponse.next();
+        if (!session) return NextResponse.redirect(new URL("/login", req.url))
+        if (role !== "ADMIN") return NextResponse.redirect(new URL("/dashboard", req.url))
+        return NextResponse.next()
     }
 
-    // ── /login, /register — redirect logged-in users away ─────────────────────
+    // Inspector routes — INSPECTOR or ADMIN
+    if (pathname.startsWith("/inspector")) {
+        if (!session) return NextResponse.redirect(new URL("/login", req.url))
+        if (role !== "INSPECTOR" && role !== "ADMIN") return NextResponse.redirect(new URL("/dashboard", req.url))
+        return NextResponse.next()
+    }
+
+    // Dashboard — any authenticated user
+    if (pathname.startsWith("/dashboard")) {
+        if (!session) return NextResponse.redirect(new URL("/login", req.url))
+        return NextResponse.next()
+    }
+
+    // Auth pages — redirect if already logged in
     if (pathname === "/login" || pathname === "/register") {
-        if (isLoggedIn) {
-            return NextResponse.redirect(
-                new URL(isAdmin ? "/admin" : "/dashboard", request.url)
-            );
+        if (session) {
+            if (role === "ADMIN") return NextResponse.redirect(new URL("/admin", req.url))
+            if (role === "INSPECTOR") return NextResponse.redirect(new URL("/inspector", req.url))
+            return NextResponse.redirect(new URL("/dashboard", req.url))
         }
-
-        return NextResponse.next();
+        return NextResponse.next()
     }
 
-    // ── /verify-email — always public ─────────────────────────────────────────
-    if (pathname.startsWith("/verify-email")) {
-        return NextResponse.next();
-    }
-
-    return NextResponse.next();
+    return NextResponse.next()
 }
 
 export const config = {
-    matcher: [
-        "/dashboard/:path*",
-        "/admin/:path*",
-        "/login",
-        "/register",
-        "/verify-email/:path*",
-    ],
-};
+    matcher: ["/admin/:path*", "/inspector/:path*", "/dashboard/:path*", "/login", "/register"],
+}
