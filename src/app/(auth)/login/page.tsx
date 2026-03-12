@@ -50,7 +50,7 @@ function LoginForm() {
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-11 h-11  rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14  rounded-xl flex items-center justify-center mx-auto mb-4">
               <Image src="/images/icon.svg" alt="logo" width={100} height={100} />
 
             </div>
