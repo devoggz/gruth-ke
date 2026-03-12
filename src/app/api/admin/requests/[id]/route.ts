@@ -10,24 +10,30 @@ const schema = z.object({
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params
+
     const session = await auth()
     if (session?.user?.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const body   = await req.json()
+    const body = await req.json()
     const parsed = schema.safeParse(body)
+
     if (!parsed.success) {
         return NextResponse.json({ error: 'Invalid input.' }, { status: 400 })
     }
 
     try {
         const updated = await prisma.verificationRequest.update({
-            where: { id: params.id },
-            data:  { status: parsed.data.status },
+            where: { id },
+            data: {
+                status: parsed.data.status,
+            },
         })
+
         return NextResponse.json({ success: true, request: updated })
     } catch {
         return NextResponse.json({ error: 'Update failed.' }, { status: 500 })
@@ -36,15 +42,20 @@ export async function PATCH(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params
+
     const session = await auth()
     if (session?.user?.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     try {
-        await prisma.verificationRequest.delete({ where: { id: params.id } })
+        await prisma.verificationRequest.delete({
+            where: { id },
+        })
+
         return NextResponse.json({ success: true })
     } catch {
         return NextResponse.json({ error: 'Delete failed.' }, { status: 500 })
