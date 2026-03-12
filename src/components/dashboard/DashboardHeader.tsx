@@ -20,7 +20,6 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 <Image src="/images/logo-t.svg" alt="logo" width={180} height={100} />
 
             </Link>
-          <span className="font-display font-semibold text-charcoal-950">GroundTruth</span>
         </div>
 
         <div className="hidden md:block" />

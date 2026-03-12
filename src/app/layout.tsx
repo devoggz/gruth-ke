@@ -1,7 +1,9 @@
 // src/app/layout.tsx
+import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
-import React from "react";
+import AuthSessionProvider from "@/components/providers/SessionProvider";
+
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +59,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
+      <AuthSessionProvider>
+
       <body className="antialiased">{children}</body>
+      </AuthSessionProvider>
     </html>
   );
 }
