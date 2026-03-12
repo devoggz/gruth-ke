@@ -1,6 +1,6 @@
 "use client";
 // src/app/(marketing)/contact/page.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);

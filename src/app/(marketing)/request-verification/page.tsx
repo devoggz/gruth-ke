@@ -7,7 +7,6 @@ import "react-phone-number-input/style.css";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 
-// ─── Google Places ─────────────────────────────────────────────────────────────
 declare global { interface Window { google: any } }
 interface Prediction {
   place_id: string;
@@ -15,8 +14,7 @@ interface Prediction {
   structured_formatting: { main_text: string; secondary_text?: string };
 }
 
-// ─── Shared react-select styles (pixel-matched to .input-field) ────────────────
-// .input-field = border-gray-200, rounded-lg, focus:ring-orange-500, py-3 px-4
+
 function buildSelectStyles(hasError = false) {
   return {
     control: (b: any, s: any) => ({

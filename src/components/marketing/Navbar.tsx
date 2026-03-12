@@ -142,18 +142,12 @@ export default function Navbar() {
           {/* CTAs + theme toggle */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
+
             <Link
               href="/login"
-              className="text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/request-verification"
               className="btn-primary text-sm py-2 px-5"
             >
-              Request Verification
+              Dashboard
             </Link>
           </div>
 

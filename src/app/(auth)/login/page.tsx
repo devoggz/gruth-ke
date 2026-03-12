@@ -69,10 +69,7 @@ function LoginForm() {
               </div>
           )}
 
-          {/* Demo hint */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-5 text-xs text-blue-700">
-            <strong>Demo:</strong> demo@groundtruth.ke / demo1234
-          </div>
+
 
           {error && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-3.5 mb-5 text-sm text-red-700 flex items-center gap-2.5">

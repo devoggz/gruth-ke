@@ -10,7 +10,7 @@ import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import CtaSection from "@/components/sections/CtaSection";
 
 export const metadata: Metadata = {
-    title: "GroundTruth — Reality, confirmed before you send the money.",
+    title: "Request Verification Now – Get Eyes on Your Project in 48 Hours",
 };
 
 export default function HomePage() {

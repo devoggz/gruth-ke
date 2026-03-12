@@ -45,7 +45,6 @@ export default function HeroSection() {
         <div className="absolute bottom-24 left-8  w-56 h-56 bg-orange-500/5  rounded-full blur-2xl" />
       </div>
 
-      {/* ── Stat cards — absolute right, vertically centred ─────────────────── */}
       <div className="absolute right-16 xl:right-48 top-1/2 -translate-y-1/2 hidden lg:grid grid-cols-2 gap-px">
         {statCards.map(({ value, label }) => (
           <div
@@ -63,12 +62,6 @@ export default function HeroSection() {
         ))}
       </div>
 
-      {/* ── Main content ─────────────────────────────────────────────────────── */}
-      {/*
-        max-w-7xl + px-4/6/8 mirrors the navbar container exactly.
-        Inner div capped at max-w-2xl so content never collides with
-        the absolutely-positioned stat cards on the right.
-      */}
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="max-w-xl lg:max-w-2xl">
           {/* Badge */}
@@ -87,15 +80,11 @@ export default function HeroSection() {
           </h1>
 
           {/* Sub-copy */}
-          <p className="text-charcoal-300 text-lg sm:text-xl leading-relaxed mb-4">
+          <p className="text-charcoal-300 text-lg sm:text-xl leading-relaxed mb-14">
             GRUTH sends an independent inspector to your site in Kenya. You get
             documented evidence — not reassurances.
           </p>
-          <p className="text-charcoal-400 text-base leading-relaxed mb-10">
-            Construction, land, events, funerals, business.
-            <br />
-            Peace of mind, delivered in 48 hours.
-          </p>
+
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 mb-14">

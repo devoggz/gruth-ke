@@ -22,7 +22,7 @@ export default function AuthLayout({
             </svg>
           </div>
           <span className="font-display font-semibold text-white text-base">
-            GroundTruth
+            GRUTH
           </span>
         </Link>
       </div>
