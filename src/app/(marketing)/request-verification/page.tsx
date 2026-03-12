@@ -19,8 +19,8 @@ function buildSelectStyles(hasError = false) {
   return {
     control: (b: any, s: any) => ({
       ...b,
-      minHeight: "46px",         // matches py-3 + line-height of input-field
-      borderRadius: "0.5rem",   // rounded-lg
+      minHeight: "46px",
+      borderRadius: "0.5rem",
       fontSize: "14px",
       fontFamily: "var(--font-body,'DM Sans',system-ui,sans-serif)",
       background: "#fff",

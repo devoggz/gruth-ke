@@ -1,9 +1,10 @@
 'use client'
 // src/app/(auth)/login/page.tsx
-import { useState, Suspense } from 'react'
+import React, { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from "next/image";
 
 function LoginForm() {
   const router = useRouter()
@@ -49,11 +50,9 @@ function LoginForm() {
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-11 h-11 bg-charcoal-950 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="white" strokeWidth="1.5" fill="none"/>
-                <circle cx="9" cy="9" r="2" fill="#f97316"/>
-              </svg>
+            <div className="w-11 h-11  rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Image src="/images/icon.svg" alt="logo" width={100} height={100} />
+
             </div>
             <h1 className="font-display text-2xl font-bold text-charcoal-950 mb-1">Welcome back</h1>
             <p className="text-charcoal-500 text-sm">Access your project dashboard</p>

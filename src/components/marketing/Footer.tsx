@@ -1,5 +1,6 @@
 // src/components/marketing/Footer.tsx
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -9,20 +10,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path
-                    d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                  <circle cx="9" cy="9" r="2" fill="white" />
-                </svg>
-              </div>
-              <span className="font-display font-semibold text-lg">
-                GRUTH
-              </span>
+
+              <Link href="/" className="flex items-center gap-2.5 group">
+                <Image src="/images/logo-w.svg" alt="logo" width={180} height={100} />
+
+              </Link>
             </div>
             <p className="text-charcoal-300 text-sm leading-relaxed mb-6">
               Reality, confirmed before you send the money.

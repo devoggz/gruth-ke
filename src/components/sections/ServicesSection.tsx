@@ -137,7 +137,6 @@ const IconFuneral = () => (
   </svg>
 );
 
-// ─── Service definitions ──────────────────────────────────────────────────────
 
 type ServiceDef = Omit<ServiceCardProps, "variant">;
 
@@ -187,7 +186,6 @@ const SERVICES: ServiceDef[] = [
   },
 ];
 
-// ─── Section ──────────────────────────────────────────────────────────────────
 
 export default function ServicesSection() {
   return (
@@ -201,9 +199,7 @@ export default function ServicesSection() {
               What we verify
             </h2>
           </div>
-          <p className="text-charcoal-500 text-base max-w-xs sm:text-right leading-relaxed">
-            If it's in Kenya and you need eyes on it, we're there.
-          </p>
+
         </div>
 
         {/* Card grid — uses ServiceCard HOC */}
