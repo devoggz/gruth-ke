@@ -113,7 +113,7 @@ export default function ContactPage() {
 
               {/* WhatsApp CTA */}
               <a
-                  href="https://wa.me/254700000000?text=Hi%20GRUTH%2C%20I%20need%20a%20verification%20in%20Kenya."
+                  href="https://wa.me/254106699315?text=Hi%20GRUTH%2C%20I%20need%20a%20verification%20in%20Kenya."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 bg-[#25D366] hover:bg-[#1ebe5c] text-white rounded-2xl px-5 py-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 group"
@@ -200,7 +200,7 @@ export default function ContactPage() {
 
                     <p className="text-xs text-charcoal-400 text-center">
                       For urgent matters, use{" "}
-                      <a href="https://wa.me/2547106699315" target="_blank" rel="noopener noreferrer"
+                      <a href="https://wa.me/254106699315" target="_blank" rel="noopener noreferrer"
                          className="text-[#25D366] font-semibold hover:underline">WhatsApp</a>{" "}
                       for a faster response.
                     </p>
