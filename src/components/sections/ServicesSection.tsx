@@ -69,13 +69,11 @@ export default function ServicesSection() {
                 What we verify
               </h2>
             </div>
-            <p className="text-charcoal-400 text-sm max-w-xs leading-relaxed sm:text-right">
-              Every service includes a photo evidence report, timeline, and direct access to your assigned inspector.
-            </p>
+
           </div>
 
           {/* Bento grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[280px] gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 auto-rows-[280px] gap-3">
             {SERVICES.map((svc) => (
                 <ServiceCard key={svc.id} {...svc} />
             ))}
