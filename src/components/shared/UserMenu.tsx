@@ -109,12 +109,12 @@ export default function UserMenu({ name, email, role }: UserMenuProps) {
                         )}
 
                         {role === 'CLIENT' && (
-                            <Link href="/request-verification" onClick={() => setOpen(false)}
+                            <Link href="/dashboard" onClick={() => setOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                                 <svg className="w-4 h-4 text-charcoal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                                     <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
                                 </svg>
-                                New Verification
+                                Dashboard
                             </Link>
                         )}
                     </div>
