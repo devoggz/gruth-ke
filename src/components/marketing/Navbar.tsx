@@ -10,7 +10,8 @@ import UserMenu from "@/components/shared/UserMenu";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled]     = useState(false);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [bannerH,    setBannerH]    = useState(0);
   const pathname  = usePathname();
   const { data: session } = useSession();
   const user = session?.user as any;
@@ -19,6 +20,19 @@ export default function Navbar() {
     const handler = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  // Track PWA banner height so navbar slides below it on mobile
+  useEffect(() => {
+    const measure = () => {
+      const el = document.getElementById('pwa-install-banner');
+      setBannerH(el ? el.offsetHeight : 0);
+    };
+    measure();
+    const obs = new MutationObserver(measure);
+    obs.observe(document.body, { childList: true, subtree: true, attributes: true });
+    window.addEventListener('resize', measure);
+    return () => { obs.disconnect(); window.removeEventListener('resize', measure); };
   }, []);
 
   // Close mobile menu on route change
@@ -35,11 +49,12 @@ export default function Navbar() {
       <>
         <nav
             className={[
-              "fixed top-0 left-0 right-0 z-50 bg-white",
+              "fixed left-0 right-0 z-50 bg-white",
               "border-b border-charcoal-100",
-              "transition-shadow duration-300",
+              "transition-all duration-300",
               scrolled ? "shadow-[0_2px_16px_rgba(0,0,0,0.08)]" : "",
             ].join(" ")}
+            style={{ top: bannerH }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -47,9 +62,9 @@ export default function Navbar() {
               {/* ── Logo ───────────────────────────────────────────────────── */}
               <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
                 <Image
-                    src="/images/logo-t.svg"
+                    src="/images/logo-2.svg"
                     alt="GRUTH"
-                    width={180}
+                    width={96}
                     height={44}
                     priority
                 />
