@@ -47,9 +47,9 @@ export default function Navbar() {
               {/* ── Logo ───────────────────────────────────────────────────── */}
               <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
                 <Image
-                    src="/images/logo-2.svg"
+                    src="/images/logo-t.svg"
                     alt="GRUTH"
-                    width={96}
+                    width={180}
                     height={44}
                     priority
                 />
