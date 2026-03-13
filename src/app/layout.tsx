@@ -6,12 +6,14 @@ import AuthSessionProvider from "@/components/providers/SessionProvider";
 
 
 export const metadata: Metadata = {
+  manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, statusBarStyle: 'default', title: 'GRUTH' },
   title: {
-    default: "GRUTH — Reality, confirmed before you send the money.",
+    default: "GRUTH - Diaspora property & investment verification",
     template: "%s | GRUTH",
   },
   description:
-    "GroundTruth provides on-the-ground verification services for diaspora-funded projects in Kenya. Construction, land, events, and more — verified by trusted local inspectors.",
+    "Diaspora property & investment verification",
   keywords: [
     "Kenya verification",
     "diaspora projects",
@@ -19,20 +21,20 @@ export const metadata: Metadata = {
     "land verification",
     "project monitoring",
   ],
-  authors: [{ name: "GroundTruth" }],
-  creator: "GroundTruth",
+  authors: [{ name: "GRUTH" }],
+  creator: "GRUTH",
   openGraph: {
     type: "website",
     locale: "en_GB",
     url: "https://groundtruth.ke",
-    title: "GroundTruth — Reality, confirmed before you send the money.",
+    title: "GRUTH — Diaspora property & investment verification",
     description:
       "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
-    siteName: "GroundTruth",
+    siteName: "GRUTH",
   },
   twitter: {
     card: "summary_large_image",
-    title: "GroundTruth",
+    title: "GRUTH",
     description:
       "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
   },

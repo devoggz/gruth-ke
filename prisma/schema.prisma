@@ -153,6 +153,7 @@ model Project {
   amountSpent       Float?
   currency          String        @default("KES")
   inspectorId       String?
+  inspectorStatus   String        @default("PENDING") // PENDING | ACCEPTED | DECLINED
   reportFileUrl     String?
   reportPublishedAt DateTime?
   clientId          String

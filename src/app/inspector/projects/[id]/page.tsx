@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { formatDate, formatRelativeDate, getStatusColor, getProjectTypeLabel } from '@/lib/utils'
 import InspectorFieldReport from '@/components/inspector/InspectorFieldReport'
+import InspectorRespondButtons from '@/components/inspector/InspectorRespondButtons'
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function InspectorProjectDetailPage({ params }: PageProps) {
     const { id } = await params
     const session = await auth()
-    const user = session?.user as any
+    const user = session?.user as { id?: string; role?: string; name?: string } | undefined
     if (!session || (user?.role !== 'INSPECTOR' && user?.role !== 'ADMIN')) redirect('/login')
 
     const project = await prisma.project.findUnique({
@@ -37,11 +38,12 @@ export default async function InspectorProjectDetailPage({ params }: PageProps) 
 
     if (!project) notFound()
     // Non-admin inspectors can only see their assigned projects
-    if (user.role === 'INSPECTOR' && project.inspectorId !== user.id) redirect('/inspector')
+    if (user?.role === 'INSPECTOR' && project.inspectorId !== user.id) redirect('/inspector')
 
     const latestScheduled = project.inspections.find(i => i.status === 'SCHEDULED')
     const completedInspections = project.inspections.filter(i => i.status === 'COMPLETED')
     const allPhotos = project.inspections.flatMap(i => i.media.filter(m => m.type === 'PHOTO'))
+    const isPending = project.inspectorStatus === 'PENDING'
 
     return (
         <div className="space-y-8 pb-16">
@@ -64,7 +66,32 @@ export default async function InspectorProjectDetailPage({ params }: PageProps) 
                 </div>
             </div>
 
-            {/* Client Info */}
+            {/* ── Accept / Decline banner ───────────────────────────────────────────── */}
+            {(isPending || project.inspectorStatus === 'DECLINED') && (
+                <div className={`card p-5 border-2 ${isPending ? 'border-orange-300 bg-orange-50/40' : 'border-red-200 bg-red-50/30'}`}>
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isPending ? 'bg-orange-500' : 'bg-red-400'}`}>
+                            <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-charcoal-900">
+                                {isPending ? 'New Project Assignment' : 'You declined this project'}
+                            </h3>
+                            <p className="text-charcoal-500 text-sm">
+                                {isPending
+                                    ? 'Review the project details below, then confirm your availability.'
+                                    : 'You previously declined. Contact the admin if your availability changed.'}
+                            </p>
+                        </div>
+                    </div>
+                    <InspectorRespondButtons
+                        projectId={project.id}
+                        currentStatus={project.inspectorStatus}
+                    />
+                </div>
+            )}
             <div className="card p-5 flex items-center gap-5">
                 <div className="w-12 h-12 bg-charcoal-950 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
                     {project.client.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}

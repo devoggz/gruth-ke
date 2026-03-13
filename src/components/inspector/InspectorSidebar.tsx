@@ -17,6 +17,10 @@ const NAV = [
         label: 'Reports', href: '/inspector/reports', exact: false,
         icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
     },
+    {
+        label: 'Settings', href: '/inspector/settings', exact: false,
+        icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>,
+    },
 ]
 
 export default function InspectorSidebar() {
@@ -54,12 +58,8 @@ export default function InspectorSidebar() {
                 })}
             </nav>
 
-            <div className="px-2.5 py-3 border-t border-white/5 space-y-0.5">
-                <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-charcoal-500 hover:text-charcoal-200 hover:bg-white/5 transition-all">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
-                    Client View
-                </Link>
-                <button onClick={() => signOut({ callbackUrl: '/login' })}
+            <div className="px-2.5 py-3 border-t border-white/5">
+                <button onClick={() => signOut({ callbackUrl: '/' })}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-charcoal-500 hover:text-red-400 hover:bg-red-400/5 transition-all">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                     Sign Out
