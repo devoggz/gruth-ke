@@ -10,155 +10,193 @@ import UserMenu from "@/components/shared/UserMenu";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
-
+  const [scrolled, setScrolled]     = useState(false);
+  const pathname  = usePathname();
   const { data: session } = useSession();
   const user = session?.user as any;
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
+    const handler = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
   const navLinks = [
-    ["Services", "/services"],
-    ["How It Works", "/how-it-works"],
-    ["About", "/about"],
-    ["Contact", "/contact"],
+    ["Services",      "/services"     ],
+    ["How It Works",  "/how-it-works" ],
+    ["About",         "/about"        ],
+    ["Contact",       "/contact"      ],
   ] as const;
 
   return (
-      <nav
-          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-              scrolled ? "shadow-sm" : ""
-          }`}
-          style={{
-            background: "var(--bg-card)",
-            borderBottom: `1px solid var(--border)`,
-          }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <>
+        <nav
+            className={[
+              "fixed top-0 left-0 right-0 z-50 bg-white",
+              "border-b border-charcoal-100",
+              "transition-shadow duration-300",
+              scrolled ? "shadow-[0_2px_16px_rgba(0,0,0,0.08)]" : "",
+            ].join(" ")}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <Image src="/images/logo-t.svg" alt="logo" width={180} height={100} />
-            </Link>
+              {/* ── Logo ───────────────────────────────────────────────────── */}
+              <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+                <Image
+                    src="/images/logo-2.svg"
+                    alt="GRUTH"
+                    width={96}
+                    height={44}
+                    priority
+                />
+              </Link>
 
-            {/* Desktop nav */}
-            <div className="hidden md:flex items-center gap-1">
+              {/* ── Desktop nav links ───────────────────────────────────────── */}
+              <div className="hidden md:flex items-center gap-0.5">
+                {navLinks.map(([label, href]) => {
+                  const active = pathname === href;
+                  return (
+                      <Link
+                          key={href}
+                          href={href}
+                          className={[
+                            "relative px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-150",
+                            active
+                                ? "text-charcoal-950"
+                                : "text-charcoal-500 hover:text-charcoal-900",
+                          ].join(" ")}
+                      >
+                        {label}
+                        {active && (
+                            <span className="absolute bottom-1 left-3.5 right-3.5 h-px bg-orange-500 rounded-full" />
+                        )}
+                      </Link>
+                  );
+                })}
+              </div>
+
+              {/* ── Desktop right: CTA / user menu ──────────────────────────── */}
+              <div className="hidden md:flex items-center gap-3 flex-shrink-0">
+                {!session ? (
+                    <div className="flex items-center gap-2.5">
+                      {/* Ghost sign-in */}
+                      <Link
+                          href="/login"
+                          className="text-sm font-medium text-charcoal-500 hover:text-charcoal-900 transition-colors duration-150 px-1"
+                      >
+                        Sign in
+                      </Link>
+
+                      {/* Primary CTA */}
+                      <Link
+                          href="/request-verification"
+                          className="group inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
+                      >
+                        Get a Verification
+                        {/* Arrow animates right on hover */}
+                        <svg
+                            width="13" height="13" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" strokeWidth="2.5"
+                            className="transition-transform duration-200 group-hover:translate-x-0.5"
+                        >
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </div>
+                ) : (
+                    <UserMenu
+                        name={user?.name}
+                        email={user?.email}
+                        role={user?.role}
+                    />
+                )}
+              </div>
+
+              {/* ── Mobile: hamburger ───────────────────────────────────────── */}
+              <button
+                  className="md:hidden p-2 rounded-lg text-charcoal-500 hover:text-charcoal-900 transition-colors"
+                  onClick={() => setMobileOpen(v => !v)}
+                  aria-label="Toggle menu"
+                  aria-expanded={mobileOpen}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  {mobileOpen ? (
+                      <path d="M18 6L6 18M6 6l12 12" />
+                  ) : (
+                      <>
+                        <line x1="3" y1="7"  x2="21" y2="7"  />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="17" x2="21" y2="17" />
+                      </>
+                  )}
+                </svg>
+              </button>
+
+            </div>
+          </div>
+
+          {/* ── Mobile drawer ─────────────────────────────────────────────────── */}
+          <div
+              className={[
+                "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
+                mobileOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0",
+              ].join(" ")}
+              style={{
+                background: "#ffffff",
+                borderTop:  "1px solid #e8e8e6",
+              }}
+          >
+            <div className="px-4 pt-4 pb-6 space-y-1">
               {navLinks.map(([label, href]) => {
                 const active = pathname === href;
                 return (
                     <Link
                         key={href}
                         href={href}
-                        className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
-                            active ? "text-orange-600" : ""
-                        }`}
-                        style={{
-                          color: active ? undefined : "var(--text-secondary)",
-                        }}
+                        className={[
+                          "flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                          active
+                              ? "text-charcoal-950 bg-charcoal-50"
+                              : "text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-50",
+                        ].join(" ")}
                     >
-                  <span className="relative">
-                    {label}
-                    {active && (
-                        <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-orange-500 rounded-full" />
-                    )}
-                  </span>
+                      {label}
+                      {active && (
+                          <span className="ml-auto w-1.5 h-1.5 rounded-full bg-orange-500" />
+                      )}
                     </Link>
                 );
               })}
-            </div>
 
-            {/* Desktop Right Side */}
-            <div className="hidden md:flex items-center gap-3">
-
-              {!session ? (
-                  <Link
-                      href="/login"
-                      className="btn-primary text-sm py-2 px-5"
-                  >
-                    Sign In
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-              ) : (
-                  <UserMenu
-                      name={user?.name}
-                      email={user?.email}
-                      role={user?.role}
-                  />
-              )}
-
-            </div>
-
-            {/* Mobile right side */}
-            <div className="md:hidden flex items-center gap-1">
-              <button
-                  className="p-2 rounded-lg transition-colors"
-                  style={{ color: "var(--text-secondary)" }}
-                  onClick={() => setMobileOpen(!mobileOpen)}
-                  aria-label="Toggle menu"
-              >
-                {mobileOpen ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 12h18M3 6h18M3 18h18" />
-                    </svg>
-                )}
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileOpen && (
-            <div
-                className="md:hidden px-4 py-4 space-y-1 border-t"
-                style={{ background: "var(--bg-card)", borderColor: "var(--border)" }}
-            >
-              {navLinks.map(([label, href]) => (
-                  <Link
-                      key={href}
-                      href={href}
-                      className="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                      style={{ color: "var(--text-primary)" }}
-                      onClick={() => setMobileOpen(false)}
-                  >
-                    {label}
-                  </Link>
-              ))}
-
-              <div
-                  className="pt-3 border-t space-y-2"
-                  style={{ borderColor: "var(--border)" }}
-              >
-
+              {/* Divider */}
+              <div className="pt-3 border-t border-charcoal-100 space-y-2.5">
                 {!session ? (
-                    <Link
-                        href="/login"
-                        className="btn-primary text-sm justify-center w-full"
-                        onClick={() => setMobileOpen(false)}
-                    >
-                      Sign In
-                    </Link>
+                    <>
+                      <Link
+                          href="/login"
+                          className="flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-medium text-charcoal-700 hover:text-charcoal-950 border border-charcoal-200 hover:border-charcoal-300 transition-all duration-150"
+                          onClick={() => setMobileOpen(false)}
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                          href="/request-verification"
+                          className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-semibold bg-orange-500 hover:bg-orange-600 text-white transition-all duration-150"
+                          onClick={() => setMobileOpen(false)}
+                      >
+                        Get a Verification
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </>
                 ) : (
-                    <div className="pt-2">
+                    <div className="pt-1">
                       <UserMenu
                           name={user?.name}
                           email={user?.email}
@@ -166,10 +204,12 @@ export default function Navbar() {
                       />
                     </div>
                 )}
-
               </div>
             </div>
-        )}
-      </nav>
+          </div>
+
+        </nav>
+
+      </>
   );
 }

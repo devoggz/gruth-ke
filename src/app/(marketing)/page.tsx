@@ -7,6 +7,7 @@ import QuoteCalculator from "@/components/home/QuoteCalculator";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import CtaSection from "@/components/sections/CtaSection";
+import HeroSectionAlt from "@/components/sections/HeroSectionAlt";
 
 export const metadata: Metadata = {
     title: "Request Verification Now – Get Eyes on Your Project in 48 Hours",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
     return (
         <div className="pt-16">
-            <HeroSection />
+            <HeroSectionAlt />
             <ProblemSection />
             <ServicesSection />
             <QuoteCalculator />

@@ -56,7 +56,7 @@ const SERVICES = [
 
 export default function ServicesSection() {
   return (
-      <section className="py-24 bg-charcoal-950">
+      <section className="py-24 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Header */}
@@ -65,7 +65,7 @@ export default function ServicesSection() {
             <span className="inline-flex items-center gap-1.5 text-orange-400 text-sm font-medium tracking-wide uppercase bg-orange-400/10 px-3 py-1 rounded-full mb-4">
               Our Services
             </span>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
+              <h2 className="font-display text-4xl sm:text-5xl font-bold  tracking-tight">
                 What we verify
               </h2>
             </div>
@@ -81,22 +81,7 @@ export default function ServicesSection() {
             ))}
           </div>
 
-          {/* Footer strip */}
-          <div className="mt-10 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-charcoal-500 text-sm">
-              Not sure which service fits?{' '}
-              <Link href="/contact" className="font-semibold text-charcoal-300 hover:text-orange-400 underline underline-offset-2 transition-colors">
-                Talk to our team
-              </Link>
-            </p>
-            <Link href="/request-verification"
-                  className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all hover:shadow-lg hover:shadow-orange-500/20 hover:-translate-y-0.5">
-              Request a verification
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </div>
+
 
         </div>
       </section>
@@ -106,8 +91,9 @@ export default function ServicesSection() {
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
 function ServiceCard({
-                       title, tagline, description, image, span,
+                       id, title, tagline, description, image, span,
                      }: {
+  id:          string
   title:       string
   tagline:     string
   description: string
@@ -153,9 +139,18 @@ function ServiceCard({
             <h3 className="font-display text-xl font-bold text-white leading-snug mb-3">
               {title}
             </h3>
-            <p className="text-charcoal-300 text-sm leading-relaxed">
+            <p className="text-charcoal-300 text-sm leading-relaxed mb-5">
               {description}
             </p>
+            <Link
+                href={`/services#${id}`}
+                className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-widest transition-colors w-fit"
+            >
+              Learn more
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
           </div>
 
         </div>

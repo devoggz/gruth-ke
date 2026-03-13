@@ -169,7 +169,7 @@ export default function QuoteCalculator() {
     }, [service, county])
 
     return (
-        <section className="py-24 bg-charcoal-950 relative overflow-hidden">
+        <section className="py-12 bg-charcoal-950 relative overflow-hidden">
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}

@@ -16,14 +16,14 @@
       }
     </style>
   </defs>
-  <circle class="st0" cx="256.4" cy="256" r="248.2"/>
+  <circle class="st0" cx="256.4" cy="256" r="157.6"/>
   <g>
-    <circle class="st2" cx="255.9" cy="256" r="131.4"/>
-    <circle class="st1" cx="327.1" cy="151.3" r="56.6"/>
+    <circle class="st2" cx="256.1" cy="256" r="83.4"/>
+    <circle class="st1" cx="301.3" cy="189.5" r="35.9"/>
   </g>
-  <circle class="st0" cx="-302.1" cy="256" r="90.6"/>
+  <circle class="st0" cx="-302.1" cy="256" r="70.6"/>
   <g>
-    <circle class="st2" cx="-302.3" cy="256" r="48"/>
-    <circle class="st1" cx="-276.3" cy="217.8" r="20.6"/>
+    <circle class="st2" cx="-302.3" cy="256" r="37.4"/>
+    <circle class="st1" cx="-282" cy="226.2" r="16.1"/>
   </g>
 </svg>
