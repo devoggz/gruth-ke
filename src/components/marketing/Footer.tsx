@@ -38,7 +38,6 @@ export default function Footer() {
                 "Wedding & Events",
                 "Business Investment",
                 "Material Pricing",
-                "Funeral Events",
               ].map((s) => (
                 <li key={s}>
                   <Link
@@ -84,7 +83,6 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                ["✓", "Licensed local inspectors"],
                 ["✓", "Photo & video evidence"],
                 ["✓", "Structured written reports"],
                 ["✓", "Real-time dashboard"],

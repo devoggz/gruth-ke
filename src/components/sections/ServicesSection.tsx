@@ -1,161 +1,156 @@
+'use client'
 // src/components/home/ServicesSection.tsx
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
+import { SERVICES } from '@/app/constants/services'
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Scroll fade-in hook ──────────────────────────────────────────────────────
+function useFadeIn(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { el.classList.add('sv-in'); obs.disconnect() } },
+        { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return ref
+}
 
-const SERVICES = [
-  {
-    id:          'construction',
-    title:       'Construction Verification',
-    tagline:     'See exactly whats been built',
-    description: 'We visit your site and document every stage — foundations, materials, structural work — and verify it matches the plan. No more guessing from blurry WhatsApp photos.',
-    image:       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80',
-    span:        'col-span-2 row-span-2',
-    tall:        true,
-  },
-  {
-    id:          'land',
-    title:       'Land & Property',
-    tagline:     'Verify before you transfer',
-    description: 'Boundaries, title deeds, encumbrances, and current occupancy — all confirmed on the ground before any funds move.',
-    image:       'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700&q=80',
-    span:        'col-span-1 row-span-1',
-    tall:        false,
-  },
-  {
-    id:          'wedding',
-    title:       'Wedding & Events',
-    tagline:     'Your day, confirmed',
-    description: 'Venue bookings, vendor readiness, décor, catering, and logistics — all verified and documented so nothing is left to chance on the day.',
-    image:       'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=700&q=80',
-    span:        'col-span-1 row-span-1',
-    tall:        false,
-  },
-  {
-    id:          'business',
-    title:       'Business Investment',
-    tagline:     'Due diligence, done right',
-    description: 'We verify that a business exists, operates as described, and matches the pitch — inventory, staff, premises, and all — before you commit capital.',
-    image:       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=80',
-    span:        'col-span-2 row-span-1',
-    tall:        false,
-  },
-  {
-    id:          'materials',
-    title:       'Material Pricing Audit',
-    tagline:     'Real prices, real time',
-    description: 'Live verified pricing from local markets — cement, steel, timber, and more — so you\'re never overcharged by contractors working from inflated quotes.',
-    image:       'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=700&q=80',
-    span:        'col-span-1 row-span-1',
-    tall:        false,
-  },
-
-]
-
-// ─── Component ────────────────────────────────────────────────────────────────
-
+// ─── Section ──────────────────────────────────────────────────────────────────
 export default function ServicesSection() {
+  const headerRef = useFadeIn(0.1)
+  const gridRef   = useFadeIn(0.05)
+
   return (
-      <section className="py-24 bg-orange-50 ">
+      <section className="py-24 bg-orange-50 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+          <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10 sv-fade">
             <div>
-            <span className="inline-flex items-center gap-1.5 text-orange-400 text-sm font-medium tracking-wide uppercase bg-orange-400/10 px-3 py-1 rounded-full mb-4">
+            <span className="inline-flex items-center gap-1.5 text-orange-600 text-[10px] font-bold tracking-widest uppercase bg-orange-100 border border-orange-200 px-3 py-1 rounded-full mb-4">
               Our Services
             </span>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold  tracking-tight">
+              <h2 className="font-display text-4xl sm:text-5xl font-bold text-charcoal-950 tracking-tight">
                 What we verify
               </h2>
             </div>
-
-          </div>
-
-          {/* Bento grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 auto-rows-[280px] gap-3">
-            {SERVICES.map((svc) => (
-                <ServiceCard key={svc.id} {...svc} />
-            ))}
-          </div>
-
-
-
-        </div>
-      </section>
-  )
-}
-
-// ─── Card ─────────────────────────────────────────────────────────────────────
-
-function ServiceCard({
-                       id, title, tagline, description, image, span,
-                     }: {
-  id:          string
-  title:       string
-  tagline:     string
-  description: string
-  image:       string
-  span:        string
-  tall:        boolean
-}) {
-  return (
-      <div className={`${span} group relative rounded-2xl overflow-hidden cursor-default`}>
-
-        {/* Image layer */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-            src={image}
-            alt={title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-
-        {/* Base gradient — always visible, darkens bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
-
-        {/* Hover overlay — slides in from bottom */}
-        <div className="absolute inset-0 bg-charcoal-950/85 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-
-        {/* Content */}
-        <div className="relative h-full flex flex-col justify-end p-6">
-
-          {/* Default state: tagline + title */}
-          <div className="group-hover:opacity-0 group-hover:-translate-y-1 transition-all duration-300">
-            <p className="text-orange-400 text-[11px] font-bold uppercase tracking-widest mb-1.5">
-              {tagline}
-            </p>
-            <h3 className="font-display text-xl font-bold text-white leading-snug">
-              {title}
-            </h3>
-          </div>
-
-          {/* Hover state: full description */}
-          <div className="absolute inset-0 flex flex-col justify-center p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75">
-            <p className="text-orange-400 text-[11px] font-bold uppercase tracking-widest mb-3">
-              {tagline}
-            </p>
-            <h3 className="font-display text-xl font-bold text-white leading-snug mb-3">
-              {title}
-            </h3>
-            <p className="text-charcoal-300 text-sm leading-relaxed mb-5">
-              {description}
-            </p>
             <Link
-                href={`/services#${id}`}
-                className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 text-xs font-bold uppercase tracking-widest transition-colors w-fit"
+                href="/services"
+                className="self-start sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-charcoal-600 hover:text-charcoal-950 transition-colors whitespace-nowrap"
             >
-              Learn more
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              All services
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
           </div>
 
+          {/* Bento grid
+            Desktop (lg): 3-col, auto-rows-[280px], Construction spans 2×2
+            Tablet (sm):  2-col grid, each card 260px tall
+            Mobile:       single column, each card 280px tall
+        */}
+          <div
+              ref={gridRef}
+              className="grid gap-3 grid-cols-1 auto-rows-[280px] sm:grid-cols-2 sm:auto-rows-[260px] lg:grid-cols-3 lg:auto-rows-[280px]"
+          >
+            {SERVICES.map((svc, i) => (
+                <div
+                    key={svc.id}
+                    className={`${svc.desktopSpan} sv-card`}
+                    style={{ transitionDelay: `${i * 80}ms` }}
+                >
+                  <ServiceCard
+                      id={svc.id}
+                      title={svc.title}
+                      tagline={svc.tagline}
+                      description={svc.description}
+                      image={svc.image}
+                  />
+                </div>
+            ))}
+          </div>
+
         </div>
 
-        {/* Subtle orange accent bar on hover */}
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        {/* Animations */}
+        <style>{`
+        .sv-fade {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .sv-fade.sv-in { opacity: 1; transform: translateY(0); }
 
+        .sv-card {
+          opacity: 0;
+          transform: translateY(28px);
+          transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .sv-in .sv-card { opacity: 1; transform: translateY(0); }
+      `}</style>
+      </section>
+  )
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+function ServiceCard({ id, title, tagline, description, image }: {
+  id:          string
+  title:       string
+  tagline:     string
+  description: string
+  image:       string
+}) {
+  return (
+      <div className="group relative w-full h-full rounded-2xl overflow-hidden cursor-default">
+        <img
+            src={image}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+        {/* Permanent bottom gradient — default state */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
+
+        {/* Hover overlay — backdrop blur + near-opaque dark so text is always readable */}
+        <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"
+            style={{
+              backdropFilter:       'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              background:           'rgba(14,13,11,0.93)',
+            }}
+        />
+
+        {/* Default: tagline + title */}
+        <div className="relative h-full flex flex-col justify-end p-5 sm:p-6">
+          <div className="group-hover:opacity-0 group-hover:-translate-y-1 transition-all duration-300">
+            <p className="text-orange-400 text-[10px] font-bold uppercase tracking-widest mb-1.5">{tagline}</p>
+            <h3 className="font-display text-xl font-bold text-white leading-snug">{title}</h3>
+          </div>
+
+          {/* Hover: full description */}
+          <div className="absolute inset-0 flex flex-col justify-center p-5 sm:p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75">
+            <p className="text-orange-400 text-[10px] font-bold uppercase tracking-widest mb-3">{tagline}</p>
+            <h3 className="font-display text-xl font-bold text-white leading-snug mb-3">{title}</h3>
+            <p className="text-charcoal-200 text-sm leading-relaxed mb-5">{description}</p>
+            <Link
+                href={`/services#${id}`}
+                className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 text-[11px] font-bold uppercase tracking-widest transition-colors w-fit"
+            >
+              Learn more
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
       </div>
   )
 }

@@ -54,7 +54,7 @@ export default function HeroSectionAlter() {
 
                     {/* Background photo — Kenyan construction site / field inspector */}
                     <img
-                        src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80"
+                        src="/images/grid.avif"
                         alt="Construction site in Kenya"
                         className="absolute inset-0 w-full h-full object-cover object-center"
                         loading="eager"
