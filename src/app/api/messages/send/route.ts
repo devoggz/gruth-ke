@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 interface SendMessageBody {
   projectId: string;
-  content:   string;
+  content: string;
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Ensure the project belongs to this user — prevents spoofed projectId
   const project = await prisma.project.findUnique({
-    where:  { id: projectId, clientId: session.user.id },
+    where: { id: projectId, clientId: session.user.id },
     select: { id: true },
   });
 
@@ -45,11 +45,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const message = await prisma.message.create({
     data: {
-      content:      content.trim(),
+      content: content.trim(),
       isFromClient: true,
       projectId,
       // userId = thread owner (the client)
-      userId:   session.user.id,
+      userId: session.user.id,
       // senderId = actual author of this message (also the client here)
       senderId: session.user.id,
     },

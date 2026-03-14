@@ -34,11 +34,11 @@ export async function GET(
   const { id: projectId } = await context.params;
 
   const project = await prisma.project.findUnique({
-    where:  { id: projectId },
+    where: { id: projectId },
     select: {
-      id:     true,
-      name:   true,
-      type:   true,
+      id: true,
+      name: true,
+      type: true,
       client: { select: { name: true, email: true } },
     },
   });
@@ -48,7 +48,7 @@ export async function GET(
   }
 
   const messages = await prisma.message.findMany({
-    where:   { projectId },
+    where: { projectId },
     include: { sender: { select: { name: true } } },
     orderBy: { createdAt: "asc" },
   });
@@ -56,24 +56,24 @@ export async function GET(
   // Mark all client messages as read (admin has now seen them)
   await prisma.message.updateMany({
     where: { projectId, isFromClient: true, readAt: null },
-    data:  { readAt: new Date() },
+    data: { readAt: new Date() },
   });
 
   return NextResponse.json({
     project: {
-      id:          project.id,
-      name:        project.name,
-      type:        project.type,
-      clientName:  project.client.name  ?? "Client",
+      id: project.id,
+      name: project.name,
+      type: project.type,
+      clientName: project.client.name ?? "Client",
       clientEmail: project.client.email,
     },
     messages: messages.map((m) => ({
-      id:           m.id,
-      content:      m.content,
+      id: m.id,
+      content: m.content,
       isFromClient: m.isFromClient,
-      createdAt:    m.createdAt,
-      readAt:       m.readAt,
-      senderName:   m.isFromClient
+      createdAt: m.createdAt,
+      readAt: m.readAt,
+      senderName: m.isFromClient
         ? (project.client.name ?? "Client")
         : (m.sender?.name ?? "GRUTH Team"),
     })),
@@ -105,7 +105,7 @@ export async function POST(
 
   // Look up the project to get the clientId (needed for userId field)
   const project = await prisma.project.findUnique({
-    where:  { id: projectId },
+    where: { id: projectId },
     select: { id: true, clientId: true },
   });
 
@@ -115,11 +115,11 @@ export async function POST(
 
   const message = await prisma.message.create({
     data: {
-      content:      body.content.trim(),
+      content: body.content.trim(),
       isFromClient: false,
       projectId,
       // userId = the client who owns the thread
-      userId:   project.clientId,
+      userId: project.clientId,
       // senderId = the admin who is actually sending this message
       senderId: session.user.id,
     },

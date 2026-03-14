@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -7,15 +7,14 @@
 /* ─── Design tokens ─────────────────────────────────────────────────────────── */
 
 :root {
-  --font-display: 'Roboto', sans-serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
-  --font-mono:    'DM Mono', 'Courier New', monospace;
+  --font-display: "Roboto", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", "Courier New", monospace;
 }
 
 /* ─── Base reset — prevent all layout shift sources ────────────────────────── */
 
 @layer base {
-
   /* 1. Hard stop on horizontal overflow — the #1 cause of mobile layout shift */
   html {
     overflow-x: hidden;
@@ -32,34 +31,47 @@
     font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.6;
-    color: theme('colors.charcoal.900');
+    color: theme("colors.charcoal.900");
     background: #ffffff;
-    -webkit-font-smoothing:  antialiased;
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Prevent text from being selectable-draggable on touch devices */
     -webkit-tap-highlight-color: transparent;
   }
 
   /* 2. Box sizing everywhere — prevents padding from expanding elements */
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
   /* 3. Images never overflow their container */
-  img, video, canvas, svg {
+  img,
+  video,
+  canvas,
+  svg {
     display: block;
     max-width: 100%;
   }
 
   /* 4. Inputs / buttons use body font — prevents iOS rendering with serif */
-  input, button, select, textarea {
+  input,
+  button,
+  select,
+  textarea {
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
   }
 
   /* 5. Remove default margin on headings — let utility classes own spacing */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 700;
     line-height: 1.1;
@@ -85,7 +97,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid theme('colors.orange.500');
+    outline: 2px solid theme("colors.orange.500");
     outline-offset: 2px;
   }
 
@@ -98,7 +110,6 @@
 /* ─── Component layer ────────────────────────────────────────────────────────── */
 
 @layer components {
-
   /* Buttons */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
@@ -205,12 +216,19 @@
 /* ─── Utility layer ──────────────────────────────────────────────────────────── */
 
 @layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-body {
+    font-family: var(--font-body);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
 
-  .font-display { font-family: var(--font-display); }
-  .font-body    { font-family: var(--font-body);    }
-  .font-mono    { font-family: var(--font-mono);    }
-
-  .text-balance { text-wrap: balance; }
+  .text-balance {
+    text-wrap: balance;
+  }
 
   /* Clip children that try to escape their box (common on mobile) */
   .contain-layout {
@@ -219,28 +237,42 @@
   }
 
   /* Safe area insets for notched phones */
-  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .pt-safe { padding-top:    env(safe-area-inset-top,    0px); }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
 
-::-webkit-scrollbar       { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: theme('colors.charcoal.300'); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: theme('colors.charcoal.400'); }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.charcoal.300");
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.charcoal.400");
+}
 
 /* ─── iOS input zoom fix ─────────────────────────────────────────────────────── */
 /* iOS zooms in when an input's font-size is < 16px.
    Setting font-size to 16px on focus prevents the page jump.           */
 
 @media (max-width: 768px) {
-  input[type='text'],
-  input[type='email'],
-  input[type='tel'],
-  input[type='number'],
-  input[type='password'],
-  input[type='search'],
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
   select,
   textarea {
     font-size: 16px !important;
@@ -250,8 +282,14 @@
 /* ─── Page enter animation ───────────────────────────────────────────────────── */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-enter {

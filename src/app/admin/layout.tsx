@@ -1,44 +1,58 @@
 // src/app/admin/layout.tsx
-import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
-import AdminSidebar from '@/components/admin/AdminSidebar'
-import UserMenu from '@/components/shared/UserMenu'
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import UserMenu from "@/components/shared/UserMenu";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-    const session = await auth()
-    if (!session || (session.user as any)?.role !== 'ADMIN') redirect('/dashboard')
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+  if (!session || (session.user as any)?.role !== "ADMIN")
+    redirect("/dashboard");
 
-    const user = session.user as any
+  const user = session.user as any;
 
-    return (
-        <div className="flex h-screen bg-[#f6f6f3] overflow-hidden">
-            <AdminSidebar />
-            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-                <header className="h-16 bg-white border-b border-charcoal-100 px-6 flex items-center justify-between flex-shrink-0">
-                    {/* Mobile logo */}
-                    <div className="md:hidden flex items-center gap-2.5">
-                        <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
-                            <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
-                                <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="white" strokeWidth="1.5" fill="none"/>
-                                <circle cx="9" cy="9" r="2" fill="white"/>
-                            </svg>
-                        </div>
-                        <span className="font-display font-bold text-charcoal-950 text-sm">GRUTH Admin</span>
-                    </div>
-
-                    <div className="hidden md:flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.12em]">Admin Console</span>
-                    </div>
-
-                    <UserMenu name={user?.name} email={user?.email} role={user?.role} />
-                </header>
-
-                <main className="flex-1 overflow-y-auto">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                        {children}
-                    </div>
-                </main>
+  return (
+    <div className="flex h-screen bg-[#f6f6f3] overflow-hidden">
+      <AdminSidebar />
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <header className="h-16 bg-white border-b border-charcoal-100 px-6 flex items-center justify-between flex-shrink-0">
+          {/* Mobile logo */}
+          <div className="md:hidden flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
+              <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
+                <path
+                  d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  fill="none"
+                />
+                <circle cx="9" cy="9" r="2" fill="white" />
+              </svg>
             </div>
-        </div>
-    )
+            <span className="font-display font-bold text-charcoal-950 text-sm">
+              GRUTH Admin
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2">
+            <span className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.12em]">
+              Admin Console
+            </span>
+          </div>
+
+          <UserMenu name={user?.name} email={user?.email} role={user?.role} />
+        </header>
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 }

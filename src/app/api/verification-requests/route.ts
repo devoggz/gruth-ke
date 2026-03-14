@@ -1,73 +1,76 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { Resend } from 'resend'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Resend } from "resend";
+import { z } from "zod";
 
-const resend   = new Resend(process.env.RESEND_API_KEY)
-const APP_URL  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://gruth.ke'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@gruth.ke'
+const resend = new Resend(process.env.RESEND_API_KEY);
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://gruth.ke";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@gruth.ke";
 
 const schema = z.object({
-  name:            z.string().min(2),
-  email:           z.string().email(),
-  phone:           z.string().optional(),
-  country:         z.string().min(2),
+  name: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  country: z.string().min(2),
   projectLocation: z.string().min(5),
-  serviceType:     z.string().min(2),
-  description:     z.string().min(20),
-})
+  serviceType: z.string().min(2),
+  description: z.string().min(20),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const body   = await req.json()
-    const parsed = schema.safeParse(body)
+    const body = await req.json();
+    const parsed = schema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid input.' }, { status: 400 })
+      return NextResponse.json({ error: "Invalid input." }, { status: 400 });
     }
 
     const request = await prisma.verificationRequest.create({
       data: { ...parsed.data },
-    })
+    });
 
     // Notify admin — non-blocking
     try {
       await resend.emails.send({
-        from:    'GRUTH <no-reply@gruth.ke>',
-        to:      ADMIN_EMAIL,
+        from: "GRUTH <no-reply@gruth.ke>",
+        to: ADMIN_EMAIL,
         subject: `New verification request — ${parsed.data.serviceType} · ${parsed.data.projectLocation}`,
-        html:    adminNotificationHtml(parsed.data, request.id),
-      })
+        html: adminNotificationHtml(parsed.data, request.id),
+      });
     } catch (emailErr) {
-      console.error('Admin notification email failed:', emailErr)
+      console.error("Admin notification email failed:", emailErr);
     }
 
-    return NextResponse.json({ success: true, id: request.id }, { status: 201 })
+    return NextResponse.json(
+      { success: true, id: request.id },
+      { status: 201 },
+    );
   } catch (error) {
-    console.error('Verification request error:', error)
-    return NextResponse.json({ error: 'Failed to submit request.' }, { status: 500 })
+    console.error("Verification request error:", error);
+    return NextResponse.json(
+      { error: "Failed to submit request." },
+      { status: 500 },
+    );
   }
 }
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl
-  const status  = searchParams.get('status') ?? undefined
-  const take    = parseInt(searchParams.get('take') ?? '50')
+  const { searchParams } = req.nextUrl;
+  const status = searchParams.get("status") ?? undefined;
+  const take = parseInt(searchParams.get("take") ?? "50");
 
   const requests = await prisma.verificationRequest.findMany({
-    where:   status ? { status } : undefined,
-    orderBy: { createdAt: 'desc' },
+    where: status ? { status } : undefined,
+    orderBy: { createdAt: "desc" },
     take,
-  })
+  });
 
-  return NextResponse.json({ requests })
+  return NextResponse.json({ requests });
 }
 
-function adminNotificationHtml(
-    data: z.infer<typeof schema>,
-    id: string,
-) {
-  const reviewUrl = `${APP_URL}/admin?tab=requests&id=${id}`
+function adminNotificationHtml(data: z.infer<typeof schema>, id: string) {
+  const reviewUrl = `${APP_URL}/admin?tab=requests&id=${id}`;
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"/></head>
@@ -87,17 +90,21 @@ function adminNotificationHtml(
           <td style="padding:28px 32px;">
             <table width="100%" cellpadding="0" cellspacing="0">
               ${[
-    ['Name',     data.name],
-    ['Email',    data.email],
-    ['Phone',    data.phone ?? '—'],
-    ['Country',  data.country],
-    ['Location', data.projectLocation],
-    ['Service',  data.serviceType],
-  ].map(([label, value]) => `
+                ["Name", data.name],
+                ["Email", data.email],
+                ["Phone", data.phone ?? "—"],
+                ["Country", data.country],
+                ["Location", data.projectLocation],
+                ["Service", data.serviceType],
+              ]
+                .map(
+                  ([label, value]) => `
               <tr>
                 <td style="padding:6px 0;color:#9ca3af;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;width:110px;vertical-align:top;">${label}</td>
                 <td style="padding:6px 0;color:#3d3b36;font-size:14px;">${value}</td>
-              </tr>`).join('')}
+              </tr>`,
+                )
+                .join("")}
             </table>
 
             <div style="margin:20px 0;padding:16px;background:#f9f9f7;border-radius:8px;border-left:3px solid #f97316;">
@@ -127,5 +134,5 @@ function adminNotificationHtml(
     </td></tr>
   </table>
 </body>
-</html>`
+</html>`;
 }

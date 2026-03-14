@@ -10,10 +10,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-
               <Link href="/" className="flex items-center gap-2.5 group">
-                <Image src="/images/logo-w.svg" alt="logo" width={180} height={100} />
-
+                <Image
+                  src="/images/logo-w.svg"
+                  alt="logo"
+                  width={180}
+                  height={100}
+                />
               </Link>
             </div>
             <p className="text-charcoal-300 text-sm leading-relaxed mb-6">

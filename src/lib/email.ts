@@ -3,39 +3,40 @@
 // Requires: npm install resend
 // Env vars: RESEND_API_KEY, NEXT_PUBLIC_APP_URL
 
-import { Resend } from 'resend'
+import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM     = 'GRUTH <kennygovoga@gmail.com>'
-const APP_URL  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://gruth-p78v.vercel.app'
+const FROM = "GRUTH <kennygovoga@gmail.com>";
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://gruth-p78v.vercel.app";
 
 // ─── Verification email ───────────────────────────────────────────────────────
 
 export async function sendVerificationEmail({
-                                                to,
-                                                name,
-                                                token,
-                                            }: {
-    to:    string
-    name:  string
-    token: string
+  to,
+  name,
+  token,
+}: {
+  to: string;
+  name: string;
+  token: string;
 }) {
-    const url = `${APP_URL}/verify-email?token=${token}`
+  const url = `${APP_URL}/verify-email?token=${token}`;
 
-    await resend.emails.send({
-        from:    FROM,
-        to,
-        subject: 'Verify your GRUTH account',
-        html:    verificationHtml({ name, url }),
-    })
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Verify your GRUTH account",
+    html: verificationHtml({ name, url }),
+  });
 }
 
 // ─── HTML template ────────────────────────────────────────────────────────────
 
 function verificationHtml({ name, url }: { name: string; url: string }) {
-    const firstName = name.split(' ')[0]
-    return `<!DOCTYPE html>
+  const firstName = name.split(" ")[0];
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -113,5 +114,5 @@ function verificationHtml({ name, url }: { name: string; url: string }) {
     </td></tr>
   </table>
 </body>
-</html>`
+</html>`;
 }

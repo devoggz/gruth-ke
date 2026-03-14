@@ -1,15 +1,15 @@
 // src/lib/auth.ts
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import Google from "next-auth/providers/google"
-import bcrypt from "bcryptjs"
-import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-})
+});
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
@@ -29,7 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: profile.email,
           image: profile.picture,
           role: "CLIENT",
-        }
+        };
       },
     }),
     Credentials({
@@ -38,17 +38,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const parsed = loginSchema.safeParse(credentials)
-        if (!parsed.success) return null
+        const parsed = loginSchema.safeParse(credentials);
+        if (!parsed.success) return null;
 
-        const { email, password } = parsed.data
-        const user = await prisma.user.findUnique({ where: { email } })
-        if (!user || !user.passwordHash) return null
+        const { email, password } = parsed.data;
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || !user.passwordHash) return null;
 
-        const ok = await bcrypt.compare(password, user.passwordHash)
-        if (!ok) return null
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        if (!ok) return null;
 
-        return { id: user.id, email: user.email, name: user.name, role: user.role }
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
       },
     }),
   ],
@@ -57,7 +62,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // For Google OAuth — upsert user into our DB
       if (account?.provider === "google" && user.email) {
         try {
-          const existing = await prisma.user.findUnique({ where: { email: user.email } })
+          const existing = await prisma.user.findUnique({
+            where: { email: user.email },
+          });
           if (!existing) {
             const created = await prisma.user.create({
               data: {
@@ -66,40 +73,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 role: "CLIENT",
                 emailVerified: new Date(), // Google emails are pre-verified
               },
-            })
-            user.id = created.id
-            ;(user as any).role = created.role
+            });
+            user.id = created.id;
+            (user as any).role = created.role;
           } else {
-            user.id = existing.id
-            ;(user as any).role = existing.role
+            user.id = existing.id;
+            (user as any).role = existing.role;
             // Stamp email verified if not already
             if (!existing.emailVerified) {
               await prisma.user.update({
                 where: { id: existing.id },
                 data: { emailVerified: new Date() },
-              })
+              });
             }
           }
         } catch (err) {
-          console.error("Google sign-in DB error:", err)
-          return false
+          console.error("Google sign-in DB error:", err);
+          return false;
         }
       }
-      return true
+      return true;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id as string
-        token.role = (user as any).role
+        token.id = user.id as string;
+        token.role = (user as any).role;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string
-        ;(session.user as any).role = token.role
+        session.user.id = token.id as string;
+        (session.user as any).role = token.role;
       }
-      return session
+      return session;
     },
   },
-})
+});

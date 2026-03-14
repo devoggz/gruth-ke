@@ -11,19 +11,19 @@ import HeroSectionAlt from "@/components/sections/HeroSectionAlt";
 import HeroSectionAlter from "@/components/sections/HeroSectionAlter";
 
 export const metadata: Metadata = {
-    title: "Request Verification Now – Get Eyes on Your Project in 48 Hours",
+  title: "Request Verification Now – Get Eyes on Your Project in 48 Hours",
 };
 
 export default function HomePage() {
-    return (
-        <div className="pt-16">
-            <HeroSectionAlter />
-            <ProblemSection />
-            <ServicesSection />
-            <QuoteCalculator />
-            <HowItWorksSection />
-            <TestimonialsSection />
-            <CtaSection />
-        </div>
-    );
+  return (
+    <div className="pt-16">
+      <HeroSectionAlter />
+      <ProblemSection />
+      <ServicesSection />
+      <QuoteCalculator />
+      <HowItWorksSection />
+      {/*<TestimonialsSection />*/}
+      <CtaSection />
+    </div>
+  );
 }

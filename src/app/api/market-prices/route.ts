@@ -8,16 +8,16 @@ import { PriceTrend } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export interface MarketPriceRow {
-  id:           string;
-  materialId:   string;
+  id: string;
+  materialId: string;
   materialName: string;
-  category:     string;
-  unit:         string;
-  priceKes:     number;
-  sourceName:   string;
-  sourceUrl:    string | null;
-  updatedAt:    Date;
-  trend:        PriceTrend;
+  category: string;
+  unit: string;
+  priceKes: number;
+  sourceName: string;
+  sourceUrl: string | null;
+  updatedAt: Date;
+  trend: PriceTrend;
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // Confirm county exists
   const county = await prisma.county.findUnique({
-    where:  { id: countyId },
+    where: { id: countyId },
     select: { id: true },
   });
 
@@ -41,28 +41,25 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   const prices = await prisma.countyMaterialPrice.findMany({
-    where:   { countyId },
+    where: { countyId },
     include: {
       material: true,
-      source:   true,
+      source: true,
     },
-    orderBy: [
-      { material: { category: "asc" } },
-      { material: { name:     "asc" } },
-    ],
+    orderBy: [{ material: { category: "asc" } }, { material: { name: "asc" } }],
   });
 
   const rows: MarketPriceRow[] = prices.map((p) => ({
-    id:           p.id,
-    materialId:   p.materialId,
+    id: p.id,
+    materialId: p.materialId,
     materialName: p.material.name,
-    category:     p.material.category,
-    unit:         p.material.unit,
-    priceKes:     p.priceKes,
-    sourceName:   p.source?.name ?? "GRUTH Field Survey",
-    sourceUrl:    p.source?.url  ?? null,
-    updatedAt:    p.updatedAt,
-    trend:        p.trend,
+    category: p.material.category,
+    unit: p.material.unit,
+    priceKes: p.priceKes,
+    sourceName: p.source?.name ?? "GRUTH Field Survey",
+    sourceUrl: p.source?.url ?? null,
+    updatedAt: p.updatedAt,
+    trend: p.trend,
   }));
 
   return NextResponse.json(rows);

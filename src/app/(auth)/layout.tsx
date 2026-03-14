@@ -11,9 +11,7 @@ export default function AuthLayout({
     <div className="min-h-screen bg-charcoal-950 flex flex-col">
       <div className="flex items-center h-16 px-8">
         <Link href="/" className="flex items-center gap-2.5">
-
           <Image src="/images/logo-w.svg" alt="logo" width={180} height={100} />
-
         </Link>
       </div>
       <div className="flex-1 flex items-center justify-center px-4 py-16">

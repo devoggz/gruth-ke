@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AuthSessionProvider from "@/components/providers/SessionProvider";
 import PWAInstallBanner from "@/components/shared/PWAInstallBanner";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
@@ -28,35 +31,35 @@ export const metadata: Metadata = {
     url: "https://gruth.ke",
     title: "GRUTH — Diaspora property & investment verification",
     description:
-        "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
+      "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
     siteName: "GRUTH",
   },
   twitter: {
     card: "summary_large_image",
     title: "GRUTH",
     description:
-        "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
+      "Trusted on-the-ground verification for diaspora-funded projects in Kenya.",
   },
   robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (
-      <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
         />
         <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
-            rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
         />
         {/* PWA + mobile meta */}
         <meta name="application-name" content="GRUTH" />
@@ -66,10 +69,11 @@ export default function RootLayout({
       </head>
       <AuthSessionProvider>
         <body className="antialiased">
-        <PWAInstallBanner />
-        {children}
+          <PWAInstallBanner />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          {children}
         </body>
       </AuthSessionProvider>
-      </html>
+    </html>
   );
 }

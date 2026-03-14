@@ -81,7 +81,6 @@ export default function HeroSection() {
             documented evidence — not reassurances.
           </p>
 
-
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 mb-14">
             <Link
